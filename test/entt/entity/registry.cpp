@@ -46,7 +46,7 @@ struct Listener {
 };
 
 TEST(Registry, Types) {
-    entt::Registry registry;
+    entt::Registry<> registry;
 
     ASSERT_EQ(registry.type<int>(entt::tag_t{}), registry.type<int>(entt::tag_t{}));
     ASSERT_EQ(registry.type<int>(), registry.type<int>());
@@ -56,7 +56,7 @@ TEST(Registry, Types) {
 }
 
 TEST(Registry, Functionalities) {
-    entt::Registry registry;
+    entt::Registry<> registry;
 
     ASSERT_EQ(registry.size(), entt::Registry<>::size_type{0});
     ASSERT_EQ(registry.alive(), entt::Registry<>::size_type{0});
@@ -200,7 +200,7 @@ TEST(Registry, Functionalities) {
 }
 
 TEST(Registry, RawData) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     const entt::Registry<> &cregistry = registry;
     const auto entity = registry.create();
 
@@ -220,7 +220,7 @@ TEST(Registry, RawData) {
 }
 
 TEST(Registry, CreateDestroyCornerCase) {
-    entt::Registry registry;
+    entt::Registry<> registry;
 
     const auto e0 = registry.create();
     const auto e1 = registry.create();
@@ -235,7 +235,7 @@ TEST(Registry, CreateDestroyCornerCase) {
 }
 
 TEST(Registry, VersionOverflow) {
-    entt::Registry registry;
+    entt::Registry<> registry;
 
     const auto entity = registry.create();
     registry.destroy(entity);
@@ -251,7 +251,7 @@ TEST(Registry, VersionOverflow) {
 }
 
 TEST(Registry, Each) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     entt::Registry<>::size_type tot;
     entt::Registry<>::size_type match;
 
@@ -304,7 +304,7 @@ TEST(Registry, Each) {
 }
 
 TEST(Registry, Orphans) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     entt::Registry<>::size_type tot{};
 
     registry.assign<int>(registry.create());
@@ -328,7 +328,7 @@ TEST(Registry, Orphans) {
 }
 
 TEST(Registry, CreateDestroyEntities) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     entt::Registry<>::entity_type pre{}, post{};
 
     for(int i = 0; i < 10; ++i) {
@@ -359,7 +359,7 @@ TEST(Registry, CreateDestroyEntities) {
 }
 
 TEST(Registry, AttachSetRemoveTags) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     const auto &cregistry = registry;
 
     ASSERT_FALSE(registry.has<int>());
@@ -406,7 +406,7 @@ TEST(Registry, AttachSetRemoveTags) {
 }
 
 TEST(Registry, StandardView) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     auto mview = registry.view<int, char>();
     auto iview = registry.view<int>();
     auto cview = registry.view<char>();
@@ -432,7 +432,7 @@ TEST(Registry, StandardView) {
 }
 
 TEST(Registry, PersistentView) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     auto view = registry.view<int, char>(entt::persistent_t{});
 
     ASSERT_TRUE((registry.contains<int, char>()));
@@ -464,7 +464,7 @@ TEST(Registry, PersistentView) {
 }
 
 TEST(Registry, RawView) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     auto view = registry.view<int>(entt::raw_t{});
 
     const auto e0 = registry.create();
@@ -482,7 +482,7 @@ TEST(Registry, RawView) {
 }
 
 TEST(Registry, CleanStandardViewAfterReset) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     auto view = registry.view<int>();
     registry.assign<int>(registry.create(), 0);
 
@@ -494,7 +494,7 @@ TEST(Registry, CleanStandardViewAfterReset) {
 }
 
 TEST(Registry, CleanPersistentViewAfterReset) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     auto view = registry.view<int, char>(entt::persistent_t{});
 
     const auto entity = registry.create();
@@ -509,7 +509,7 @@ TEST(Registry, CleanPersistentViewAfterReset) {
 }
 
 TEST(Registry, CleanRawViewAfterReset) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     auto view = registry.view<int>(entt::raw_t{});
     registry.assign<int>(registry.create(), 0);
 
@@ -521,7 +521,7 @@ TEST(Registry, CleanRawViewAfterReset) {
 }
 
 TEST(Registry, CleanTagsAfterReset) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     const auto entity = registry.create();
     registry.assign<int>(entt::tag_t{}, entity);
 
@@ -533,7 +533,7 @@ TEST(Registry, CleanTagsAfterReset) {
 }
 
 TEST(Registry, SortSingle) {
-    entt::Registry registry;
+    entt::Registry<> registry;
 
     int val = 0;
 
@@ -553,7 +553,7 @@ TEST(Registry, SortSingle) {
 }
 
 TEST(Registry, SortMulti) {
-    entt::Registry registry;
+    entt::Registry<> registry;
 
     unsigned int uval = 0u;
     int ival = 0;
@@ -586,7 +586,7 @@ TEST(Registry, SortMulti) {
 
 TEST(Registry, ComponentsWithTypesFromStandardTemplateLibrary) {
     // see #37 - the test shouldn't crash, that's all
-    entt::Registry registry;
+    entt::Registry<> registry;
     const auto entity = registry.create();
     registry.assign<std::unordered_set<int>>(entity).insert(42);
     registry.destroy(entity);
@@ -594,7 +594,7 @@ TEST(Registry, ComponentsWithTypesFromStandardTemplateLibrary) {
 
 TEST(Registry, ConstructWithComponents) {
     // it should compile, that's all
-    entt::Registry registry;
+    entt::Registry<> registry;
     const auto value = 0;
     registry.assign<int>(registry.create(), value);
 }
@@ -602,8 +602,8 @@ TEST(Registry, ConstructWithComponents) {
 TEST(Registry, MergeTwoRegistries) {
     using entity_type = entt::Registry<>::entity_type;
 
-    entt::Registry src;
-    entt::Registry dst;
+    entt::Registry<> src;
+    entt::Registry<> dst;
 
     std::unordered_map<entity_type, entity_type> ref;
 
@@ -655,7 +655,7 @@ TEST(Registry, MergeTwoRegistries) {
 }
 
 TEST(Registry, ComponentSignals) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     Listener listener;
 
     registry.construction<int>().connect<&Listener::incrComponent<int>>(&listener);
@@ -709,7 +709,7 @@ TEST(Registry, ComponentSignals) {
 }
 
 TEST(Registry, TagSignals) {
-    entt::Registry registry;
+    entt::Registry<> registry;
     Listener listener;
 
     registry.construction<int>(entt::tag_t{}).connect<&Listener::incrTag<int>>(&listener);
@@ -747,7 +747,7 @@ TEST(Registry, TagSignals) {
 }
 
 TEST(Registry, DestroyByTagAndComponents) {
-    entt::Registry registry;
+    entt::Registry<> registry;
 
     const auto e0 = registry.create();
     const auto e1 = registry.create();
