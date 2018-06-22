@@ -706,7 +706,7 @@ public:
     template<typename... Component>
     bool has(const entity_type entity) const ENTT_NOEXCEPT {
         assert(valid(entity));
-        return (true && ... && (managed<Component>() && pool<Component>().has(entity)));
+        return ((managed<Component>() && pool<Component>().has(entity)) && ...);
     }
 
     /**
@@ -761,7 +761,7 @@ public:
     template<typename... Component>
     decltype(auto) get([[maybe_unused]] const entity_type entity) const ENTT_NOEXCEPT {
         assert(valid(entity));
-        assert((true && ... && managed<Component>()));
+        assert((managed<Component>() && ...));
 
         if constexpr(sizeof...(Component) == 1) {
             return pool<Component...>().get(entity);
